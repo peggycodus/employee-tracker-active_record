@@ -2,5 +2,5 @@ class AddDescriptionToTeamProject < ActiveRecord::Migration
   def change
   end
 
-  add_column :team_projects, :description, :string
+  add_column :teamProjects, :description, :string
 end

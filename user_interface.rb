@@ -1,6 +1,7 @@
 require 'active_record'
 require './lib/employee'
 require './lib/division'
+require './lib/project'
 require 'pry'
 
 database_configurations = YAML::load(File.open('./db/config.yml'))
@@ -15,6 +16,7 @@ def main_menu
 
     puts "Please press '1' for divisions ."
     puts "Please press '2' for employees."
+    puts "Please press '3' for projects"
     puts "Please press 'e' to exit the program."
     choice = gets.chomp
 
@@ -23,6 +25,8 @@ def main_menu
       division_menu
     when "2"
       employee_menu
+    when "3"
+      project_menu
     when "e"
       puts "Good-bye"
       exit
@@ -64,7 +68,6 @@ end
 
 def division_menu
 
-
   choice = nil
   until choice == "e"
     puts "Please press 'a' to add a division."
@@ -94,6 +97,62 @@ def division_menu
   end
 end
 
+def project_menu
+  choice = nil
+  until choice == "e"
+    puts "Please press 'a' to add a project."
+    puts "Please press 'l' to list all projects."
+    puts "Please press 'd' to delete a project."
+    puts "Please press 'e' to exit the program."
+    puts "Please press 'r' to return to main menu."
+    choice = gets.chomp
+
+    case choice
+    when "a"
+      add_project
+    when "l"
+      list_all_projects
+    when "d"
+      delete_project
+    when "e"
+      puts "Good-bye"
+      exit
+    when "r"
+      main_menu
+    else
+      puts "Please enter a valid option."
+    end
+    project_menu
+  end
+end
+
+def add_project
+  puts "Please enter the name of the project you want to add."
+  project_name = gets.chomp.capitalize
+  puts "Please enter a start date for the project (e.g. 2011-04-20)."
+  start_date = gets.chomp
+  puts "Please enter an end date for the project (e.g. 2012-12-34)."
+  end_date = gets.chomp
+  new_project = Project.new(name: project_name, start_date: start_date, end_date: end_date)
+  new_project.save
+  puts "You have added #{new_project.name} as a new project."
+end
+
+def list_all_projects
+  puts "Here is a list of all the projects."
+  project_list = Project.all
+  project_list.each { |project| puts "#{project.name} #{project.start_date} #{project.end_date}"}
+end
+
+def delete_project
+  puts "Type in the name of the project you want to delete."
+
+  list_all_projects
+  name = gets.chomp
+  delete_project = Project.find_by(name: name)
+  delete_project.destroy
+end
+
 def add_employee
   puts "Please enter the first name of the employee you want to add."
   first_name = gets.chomp.capitalize
@@ -105,7 +164,7 @@ def add_employee
   division_id = Division.find_by(name: division_name).id
   new_employee = Employee.new({first_name: first_name, last_name: last_name, division_id: division_id})
   new_employee.save
-  puts "You have add #{first_name} #{last_name} as an employee."
+  puts "You have added #{first_name} #{last_name} as an employee."
 end
 
 def list_all_employees
