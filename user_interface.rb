@@ -78,15 +78,17 @@ def list_all_employees
   employees_list.each { |employee| puts "#{employee.first_name} #{employee.last_name}"}
 end
 
-# def delete_employee
-#   puts "Please enter the first name of the employee you want to delete."
-#   first_name = gets.chomp.capitalize
-#   puts "PLease enter the last name of the employee."
-#   last_name = gets.chomp.capitalize
+def delete_employee
+  puts "Please enter the first name of the employee you want to delete."
+  first_name = gets.chomp.capitalize
+  puts "Please enter the last name of the employee."
+  last_name = gets.chomp.capitalize
 
-#   Employee.delete(first_name: first_name, last_name: last_name)
-#   puts "You have successfully delete #{first_name} #{last_name}."
-# end
+  new_employee = Employee.find_by(first_name: first_name, last_name: last_name)
+  new_employee.destroy
+
+  puts "You have successfully delete #{first_name} #{last_name}."
+end
 
 def list_all_divisions
   puts "Here are all of the Divisions:"
