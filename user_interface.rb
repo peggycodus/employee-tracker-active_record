@@ -1,5 +1,6 @@
 require 'active_record'
 require './lib/employee'
+require './lib/division'
 
 database_configurations = YAML::load(File.open('./db/config.yml'))
 development_configuration = database_configurations['development']
@@ -37,6 +38,7 @@ def employee_menu
     puts "Please press 'a' to add an employee."
     puts "Please press 'l' to list all employees."
     puts "Please press 'd' to delete an employee."
+    puts "Please press 'r' to return to main menu."
     puts "Please press 'e' to exit the program."
     choice = gets.chomp
 
@@ -50,6 +52,8 @@ def employee_menu
     when "e"
       puts "Good-bye"
       exit
+    when "r"
+      main_menu
     else
       puts "Please enter a valid option."
     end
@@ -59,6 +63,33 @@ end
 
 def division_menu
 
+
+  choice = nil
+  until choice == "e"
+    puts "Please press 'a' to add a division."
+    puts "Please press 'l' to list all divisions."
+    puts "Please press 'd' to delete a division."
+    puts "Please press 'e' to exit the program."
+    puts "Please press 'r' to return to main menu."
+    choice = gets.chomp
+
+    case choice
+    when "a"
+      add_division
+    when "l"
+      list_all_divisions
+    when "d"
+      delete_division
+    when "e"
+      puts "Good-bye"
+      exit
+    when "r"
+      main_menu
+    else
+      puts "Please enter a valid option."
+    end
+    division_menu
+  end
 end
 
 def add_employee
@@ -88,6 +119,25 @@ def delete_employee
   new_employee.destroy
 
   puts "You have successfully delete #{first_name} #{last_name}."
+end
+
+def add_division
+  puts "Please enter the name of the division you want to add."
+  division_name = gets.chomp
+
+  new_division = Division.new({name: division_name})
+  new_division.save
+  puts "You have add #{new_division.name} as a new division."
+end
+
+def delete_division
+  puts "Please enter the name of the division you want to delete."
+  division_name = gets.chomp
+
+  delete_division = Division.find_by(name: division_name)
+  delete_division.destroy
+
+  puts "You have successfully deleted #{division_name}."
 end
 
 def list_all_divisions
