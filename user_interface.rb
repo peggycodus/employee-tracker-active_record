@@ -52,6 +52,8 @@ def employee_menu
       add_employee
     when "l"
       list_all_employees
+    when "c"
+      add_employee_project_contribution
     when "d"
       delete_employee
     when "e"
@@ -138,6 +140,7 @@ def add_project
   puts "You have added #{new_project.name} as a new project."
 end
 
+
 def list_all_projects
   puts "Here is a list of all the projects."
   project_list = Project.all
@@ -172,6 +175,23 @@ def list_all_employees
   employees_list = Employee.all
   employees_list.each { |employee| puts "#{employee.first_name} #{employee.last_name}"}
 end
+
+def add_employee_project_contribution
+list_all_projects
+puts " Enter a project name to add a contribution"
+project_name = gets.chomp.capitalize
+puts "Enter the employee's first name"
+first_name = gets.chomp.capitalize
+puts "Please enter the employee's last name."
+puts "Enter the employees last name"
+last_name = gets.chomp.capitalize
+Puts "enter the description for the employee contribution"
+description = gets.chomp
+project_id = Project.find_by(name: project_name).id
+employee_id = Employee.find_by(first_name: first_name, last_name: last_name).id
+new_contribution = TeamProject.new({project_id:})
+end
+
 
 def delete_employee
   puts "Please enter the first name of the employee you want to delete."
