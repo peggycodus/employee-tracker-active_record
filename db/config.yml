@@ -1,0 +1,7 @@
+development:
+  adapter: postgresql
+  database: employee_tracker2_development
+
+test:
+  adapter: postgresql
+  database: employee_tracker2_test
