@@ -1,6 +1,7 @@
 require 'active_record'
 require './lib/employee'
 require './lib/division'
+require 'pry'
 
 database_configurations = YAML::load(File.open('./db/config.yml'))
 development_configuration = database_configurations['development']
@@ -78,6 +79,7 @@ def division_menu
       add_division
     when "l"
       list_all_divisions
+      employee_by_division
     when "d"
       delete_division
     when "e"
@@ -97,8 +99,11 @@ def add_employee
   first_name = gets.chomp.capitalize
   puts "Please enter the last name."
   last_name = gets.chomp.capitalize
-
-  new_employee = Employee.new({first_name: first_name, last_name: last_name})
+  puts "Please enter the name of the division this employee belongs to."
+  list_all_divisions
+  division_name = gets.chomp
+  division_id = Division.find_by(name: division_name).id
+  new_employee = Employee.new({first_name: first_name, last_name: last_name, division_id: division_id})
   new_employee.save
   puts "You have add #{first_name} #{last_name} as an employee."
 end
@@ -146,4 +151,29 @@ def list_all_divisions
   divisions_list.each {|division| puts "#{division.name}"}
 end
 
+def employee_by_division
+  puts "Type in the division name if you want to see which employees are part of that specific division, else press 'x' to exit back to the division_menu."
+  answer = gets.chomp
+
+  case
+  when answer == "x"
+    division_menu
+  when Division.where(name: answer).count == 0
+    puts" please enter an existing division name"
+    list_all_divisions
+  else
+    selected_division_list = []
+    selected_division_id = Division.find_by(name: answer).id
+    employee_division_list = Employee.where(division_id: selected_division_id)
+
+    employee_division_list.each do |employee|
+      if employee_division_list == []
+        puts "There are no employees in this division yet."
+      else
+        puts "#{employee.first_name} #{employee.last_name}"
+      end
+    end
+  end
+
+end
 main_menu
